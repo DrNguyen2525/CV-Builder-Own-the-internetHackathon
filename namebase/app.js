@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
+var skynet = require('@nebulous/skynet');
 var cors = require('cors');
 var fs = require('fs');
 var app = express();
@@ -31,7 +32,7 @@ app.use(cookieParser());
 app.use('/', route);
 
 // Upload avatar
-app.post('/avatar', upload.single('avatar'), (req, res) => {
+app.post('/avatar', upload.single('avatar'), async (req, res) => {
   const processedFile = req.file || {}; // MULTER xử lý và gắn đối tượng FILE vào req
   let orgName = processedFile.originalname || ''; // Tên gốc trong máy tính của người upload
   orgName = orgName.trim().replace(/ /g, '-');
@@ -39,10 +40,15 @@ app.post('/avatar', upload.single('avatar'), (req, res) => {
   // Đổi tên của file vừa upload lên, vì multer đang đặt default ko có đuôi file
   const newFullPath = `${fullPathInServ}-${orgName}`;
   fs.renameSync(fullPathInServ, newFullPath);
+
+  let url = await skynet.uploadFile(`./${newFullPath}`);
+
+  url = url.toString().slice(6);
+  console.log(`Upload successful, url: https://siasky.net/${url}`);
   res.send({
     status: true,
     message: 'file uploaded',
-    fileNameInServer: newFullPath
+    fileNameInServer: url
   });
 });
 
