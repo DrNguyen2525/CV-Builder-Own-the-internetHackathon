@@ -46,8 +46,8 @@ app.post('/avatar', upload.single('avatar'), (req, res) => {
   });
 });
 
-app.listen(4000, (err) => {
-  console.log('Server is running in port 4000 !!!');
+app.listen(4000, err => {
+  console.log('Server is listening at port 4000.');
 });
 
 module.exports = app;
