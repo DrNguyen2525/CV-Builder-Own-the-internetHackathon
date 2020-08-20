@@ -16,7 +16,7 @@ import DatabaseContext from './DatabaseContext';
 // import LocalResumeContext from './LocalResumeContext';
 
 const ResumeContext = createContext({
-  state: {},
+  state: initialState,
   dispatch: () => {}
 });
 
